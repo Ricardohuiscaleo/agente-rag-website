@@ -2,18 +2,18 @@ FROM node:20-alpine AS base
 WORKDIR /app
 
 # Instalar dependencias
-FROM base AS deps
 COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
-# Build
-FROM base AS build
-COPY --from=deps /app/node_modules ./node_modules
+# Copiar código
 COPY . .
-RUN npm run build
 
-# Producción
-FROM nginx:alpine AS runtime
-COPY --from=build /app/dist /usr/share/nginx/html
+# Build con más memoria
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+RUN npm run build || npm run build -- --verbose
+
+# Producción con Nginx
+FROM nginx:alpine
+COPY --from=base /app/dist /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
