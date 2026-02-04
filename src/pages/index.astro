@@ -1,0 +1,627 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroTitle from '../components/hero/HeroTitle.astro';
+import HeroHighlightWrapper from '../components/hero/HeroHighlightWrapper.astro';
+import ValueProposition from '../components/animations/ValueProposition.astro';
+import GradientText from '../components/text/GradientText.jsx';
+import GradientSpan from '../components/text/GradientSpan.astro';
+import HighlightSpan from '../components/text/HighlightSpan.astro';
+import { FlipWords } from '../components/ui/flip-words';
+import DecryptedText from '../components/ui/decrypted-text';
+import { Cover } from '../components/ui/cover';
+import TrueFocus from '../components/ui/true-focus';
+import { AnimatedText } from '../components/ui/animated-text';
+import { CardsSection } from '../components/sections/CardsSection';
+import ChatbotWrapper from '../components/chatbot/ChatbotWrapper.astro';
+
+// Importar estilos
+import '../components/ui/true-focus.css';
+
+// Define page metadata
+const pageTitle = 'Automatiza tu Pyme en Chile con Agentes IA RAG | AgenteRAG.com';
+const pageDescription =
+  'AgenteRAG.com: Impulsa tu Pyme en Chile con Agentes de IA RAG. Ofrece respuestas precisas basadas en tus datos, optimiza la atención al cliente y automatiza tareas repetitivas. ¡Descubre la IA que conoce tu negocio!';
+
+// Definir colores para el tema claro y oscuro inspirados en Apple Intelligence
+const lightModeColors = ['#0070f3', '#6366f1', '#d946ef', '#f97316']; // Azul, índigo, magenta, naranja
+const darkModeColors = ['#2563eb', '#8b5cf6', '#ec4899', '#f97316']; // Versiones más vibrantes para modo oscuro
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Wrapper para posicionar correctamente todos los elementos -->
+  <div class="page-content-wrapper">
+    <!-- Hero section con estructura mejorada -->
+    <div class="hero-section">
+      <!-- Contenedor para el HeroHighlight con mejor manejo de eventos -->
+      <div class="highlight-wrapper">
+        <HeroHighlightWrapper height="800px" id="hero-highlight-independent">
+          <HeroTitle
+            position="center"
+            alignment="center"
+            offsetTop="200px"
+            layout="vertical"
+            className="z-10 relative"
+          >
+            <GradientText
+              client:load
+              showBorder={false}
+              colors={lightModeColors}
+              darkModeColors={darkModeColors}
+              animationSpeed={4}
+              showShimmer={true}
+              shimmerIntensity="low"
+              className="font-bold text-gradient no-shadow no-blur clean-gradient theme-aware text-center"
+              >Con Inteligencia Artificial RAG.</GradientText
+            >
+
+            <!-- Restaurando los efectos individuales para cada frase, pero en un contenedor unificado -->
+            <div class="hero-text-container">
+              <div class="phrase-container">
+                <TrueFocus
+                  client:load
+                  sentence="Reduce Costos."
+                  manualMode={true}
+                  blurAmount={5}
+                  borderColor="#06b6d4"
+                  glowColor="rgba(6, 182, 212, 0.6)"
+                  animationDuration={0.65}
+                  pauseBetweenAnimations={1.3}
+                  initialAnimation={true}
+                  className="theme-adaptive-text font-bold"
+                />
+              </div>
+              <div class="phrase-container">
+                <Cover
+                  client:load
+                  permanentEffect={true}
+                  className="theme-adaptive-text font-bold shimmer-text">Automatiza.</Cover
+                >
+              </div>
+              <div class="phrase-container">
+                <DecryptedText
+                  client:load
+                  text="Transforma."
+                  animateOn="view"
+                  sequential={true}
+                  speed={60}
+                  maxIterations={10}
+                  className="theme-adaptive-text font-bold"
+                  encryptedClassName=""
+                  revealDirection="start"
+                  characters="🤖🧠💬💡📊🔍📝🔄⚙️💾📈🌐📱💻⚡️🔮🧩🔧🎯📚"
+                  useOriginalCharsOnly={false}
+                  cyberpunkColors={false}
+                />
+              </div>
+            </div>
+          </HeroTitle>
+        </HeroHighlightWrapper>
+      </div>
+
+      <!-- Contenido principal que se desplaza sobre el HeroHighlight -->
+      <div class="scrollable-content">
+        <p class="skills-text">
+          <AnimatedText
+            client:load
+            text="Especialistas en Atención al Cliente, Automatización, Generación de Ideas y Análisis de Datos"
+            effectType="mixed"
+            intensity="light"
+            staggerChildren={true}
+            delayBetween={0.02}
+            animationDuration={1.5}
+            className="inline-block"
+            charClassName="text-current"
+          />
+        </p>
+
+        <GradientText
+          client:load
+          colors={['#0070f3', '#6366f1', '#d946ef', '#f97316']}
+          darkModeColors={['#2563eb', '#8b5cf6', '#ec4899', '#f97316']}
+          animationSpeed={8}
+          showBorder={true}
+          showShimmer={true}
+          shimmerIntensity="high"
+          enhancedContrast={true}
+          className="hero-gradient-text theme-aware"
+        >
+          Potencia tu negocio con Inteligencia Artificial
+        </GradientText>
+
+        <ValueProposition />
+
+        <CardsSection
+          client:load
+          title="Nuestros Servicios"
+          subtitle="Soluciones inteligentes adaptadas a las necesidades de tu empresa"
+          className="mt-16 mb-8"
+        />
+
+        <ChatbotWrapper />
+
+        <style>
+          /* Wrapper para toda la página que establece el contexto de apilamiento */
+          .page-content-wrapper {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            z-index: 4; /* Asegurar que esté por debajo del SplashCursor */
+          }
+
+          /* Hero section ajustada para mantener el flujo correcto */
+          .hero-section {
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+          }
+
+          /* Nuevo wrapper mejorado para el highlight */
+          .highlight-wrapper {
+            position: absolute; /* Cambiado de fixed a absolute para que se desplace con el scroll */
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            height: var(--highlight-wrapper-height, 800px); /* Variable para controlar altura */
+            top: var(
+              --highlight-wrapper-top,
+              -90px
+            ); /* Ajustado para el nuevo orden de elementos */
+            left: 0;
+            right: 0;
+            overflow: visible;
+            z-index: 4; /* Mantenido para estar detrás del header */
+            pointer-events: none;
+            padding: 0;
+            max-width: none;
+            /* Se pueden ajustar estos valores con CSS personalizado: 
+       --highlight-wrapper-height: 800px;
+       --highlight-wrapper-top: 0; 
+    */
+          }
+
+          /* Hack para permitir que los eventos del mouse pasen al HeroHighlight */
+          .highlight-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: auto; /* Capturar eventos aquí y propagarlos */
+          }
+
+          /* Contenedor de blur para el header */
+          .header-blur-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; /* Altura inicial igual al header */
+            z-index: 9; /* Justo debajo del header (z-index: 10) */
+            pointer-events: none; /* Permite que los eventos pasen al contenido */
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Mismo efecto elástico que el header */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+          }
+
+          /* Contenido interno del blur que imita la forma exacta del header */
+          .header-blur-container::before {
+            content: '';
+            width: 80%; /* Mismo ancho que header-inner (80%) */
+            max-width: 790px; /* Mismo max-width que header-inner */
+            height: 60px; /* Misma altura que header-inner */
+            margin: 0.8rem auto 0; /* Mismo margen que header-inner */
+            border-radius: 30px; /* Mismo radio que header-inner */
+            background-color: rgba(30, 30, 50, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efecto elástico igual que el header */
+          }
+
+          /* Versión del contenedor cuando el header está en modo sticky */
+          .header-blur-container.sticky {
+            height: 40px; /* Misma altura que el header en sticky */
+            margin-top: 0; /* Eliminar cualquier margen superior */
+          }
+
+          /* Ajuste del contenido interno en modo sticky */
+          .header-blur-container.sticky::before {
+            height: 40px; /* Misma altura que header-inner en sticky */
+            width: 80%; /* Mantener el mismo ancho que en estado normal (80%) */
+            max-width: 790px; /* Mantener el mismo max-width que en estado normal */
+            margin: 0 auto; /* Mismo margen que header-inner en sticky */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+          }
+
+          /* Versión del contenedor cuando el menú hamburguesa está expandido */
+          .header-blur-container.expanded {
+            height: 800px !important; /* Altura fija con !important para asegurar que se aplique */
+          }
+
+          /* Ajuste del contenido interno cuando está expandido */
+          .header-blur-container.expanded::before {
+            height: 40px !important; /* Mantener la misma altura que header-inner */
+            max-height: none !important;
+            min-height: 40px !important; /* Coincide con altura del header */
+            transition: height 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
+          }
+
+          /* Modo claro */
+          html[data-theme='light'] .header-blur-container::before {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          }
+
+          /* Modo oscuro */
+          html[data-theme='dark'] .header-blur-container::before {
+            background-color: rgba(30, 30, 50, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+          }
+
+          /* Modo oscuro + sticky */
+          html[data-theme='dark'] .header-blur-container.sticky::before {
+            background-color: rgba(12, 12, 14, 0.25);
+          }
+
+          /* Modo claro + sticky */
+          html[data-theme='light'] .header-blur-container.sticky::before {
+            background-color: rgba(255, 255, 255, 0.4);
+          }
+
+          /* Ocultar cuando el header está oculto */
+          .header-blur-container.hidden {
+            transform: translateY(-100%);
+          }
+
+          /* Media Query para Móvil (< 900px) - Mismo breakpoint que usa el header */
+          @media (max-width: 900px) {
+            /* Ajustar header-blur-container para móvil */
+            .header-blur-container {
+              height: auto; /* Permitir que la altura se base en el pseudo-elemento */
+            }
+
+            /* Ajuste del contenido interno para móvil */
+            .header-blur-container::before {
+              height: 60px; /* Misma altura que header-inner en móvil */
+              width: 95%; /* Mismo ancho que header-inner en móvil (95%) */
+              margin: 0 auto; /* Sin margen superior en móvil */
+              border-radius: 30px;
+            }
+
+            /* Ajustes específicos para el blur en modo sticky en móvil */
+            .header-blur-container.sticky::before {
+              width: 95%; /* Mismo ancho que header-inner en sticky para móvil */
+              height: 40px; /* Altura inicial en sticky */
+            }
+
+            /* Sobrescribir la altura para el caso expandido en móvil */
+            .header-blur-container.expanded {
+              height: 350px !important; /* Misma altura fija en móvil */
+            }
+
+            /* Asegurar que el blur tenga la altura correcta cuando está expandido en móvil */
+            .header-blur-container.expanded::before {
+              height: 30px !important; /* Asegurar que use esta altura */
+              max-height: none !important;
+              min-height: 330px !important;
+            }
+          }
+
+          /* Contenido desplazable que aparece encima del highlight */
+          .scrollable-content {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 500px; /* Espacio para que el contenido comience después del título */
+            z-index: 1002; /* Aumentado para estar por encima del HeroHighlight (z-index: 1001) */
+            pointer-events: auto;
+          }
+
+          /* Hacer que el contenido sea transparente a los eventos del mouse en la parte superior */
+          .scrollable-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 400px; /* Altura suficiente para cubrir el área superior */
+            pointer-events: none; /* Permitir que los eventos pasen al highlight */
+            z-index: -1; /* Debajo del contenido real */
+          }
+
+          .hero-gradient-text {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 2rem 0;
+            text-align: center;
+            max-width: 800px;
+          }
+
+          .skills-text {
+            margin: 2rem 0 1rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #4a5568;
+            text-align: center;
+            max-width: 800px;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(45deg, #f2f2f2, #ffffff);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+          }
+
+          /* Elemento de prueba para ver si el efecto blur funciona */
+          .test-blur-box {
+            position: sticky;
+            top: 100px;
+            width: 300px;
+            height: 150px;
+            margin: 120px auto 20px;
+            z-index: 5;
+          }
+
+          .test-blur-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(100, 100, 255, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+          }
+
+          .test-blur-content p {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+          }
+
+          html[data-theme='light'] .test-blur-content {
+            background-color: rgba(255, 255, 255, 0.3);
+          }
+
+          html[data-theme='light'] .test-blur-content p {
+            color: #333;
+          }
+
+          /* Clase específica para FlipWords */
+          :global(.gradient-text) {
+            display: inline-block;
+            background-image: linear-gradient(90deg, #00a6ff, #f700f3, #fe6100);
+            background-size: 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent !important;
+            font-weight: bold;
+          }
+
+          /* Estilo personalizado para mantener la negrita en texto con gradiente */
+          :global(.text-gradient) {
+            font-weight: bold !important;
+            font-family: inherit;
+            background-size: 300% 100% !important;
+            animation: gradient 10s linear infinite !important;
+          }
+
+          :global(.text-gradient .text-content) {
+            font-weight: bold !important;
+            padding: 0 0.5rem !important;
+          }
+
+          /* Estilos para el tema adaptable */
+          :global(.theme-aware .text-content) {
+            transition: background-image 0.3s ease;
+          }
+
+          /* Clase adaptativa para texto que cambia con el tema */
+          .theme-adaptive-text {
+            color: #000000;
+          }
+
+          html[data-theme='dark'] .theme-adaptive-text {
+            color: #ffffff;
+          }
+
+          html[data-theme='dark'] .skills-text {
+            color: #e2e8f0;
+            background: linear-gradient(45deg, #2d3748, #1a202c);
+          }
+
+          @media (max-width: 768px) {
+            .hero-gradient-text {
+              font-size: 1.5rem;
+            }
+
+            .skills-text {
+              font-size: 1.2rem;
+              margin: 1.5rem 0 0.75rem;
+              padding: 0.4rem 0.8rem;
+            }
+
+            .scrollable-content {
+              padding-top: 400px; /* Menos espacio en móvil */
+            }
+
+            /* Ajuste específico para móvil para asegurar que los eventos de hover funcionen */
+            .highlight-wrapper {
+              height: 100vh;
+              pointer-events: none;
+              touch-action: auto; /* Mejorar comportamiento táctil en móvil */
+            }
+
+            /* Hacer que el contenido sea transparente a los eventos del mouse en toda la altura */
+            .scrollable-content::before {
+              height: 400px;
+            }
+          }
+
+          /* Estilos ajustados para garantizar el mismo tamaño visual */
+          .hero-text-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+          }
+
+          .phrase-container {
+            font-size: 2.4rem;
+            font-weight: bold;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+
+          /* Estilos más específicos para componentes anidados */
+          .phrase-container :global(*),
+          .phrase-container :global(span),
+          .phrase-container :global(div) {
+            font-size: 2.4rem !important;
+            font-weight: bold !important;
+            line-height: 1 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+
+          @media (max-width: 768px) {
+            .hero-text-container {
+              flex-direction: row;
+              flex-wrap: wrap;
+              justify-content: center;
+              gap: 0.8rem;
+            }
+
+            .phrase-container {
+              font-size: 1.5rem;
+            }
+
+            .phrase-container :global(*),
+            .phrase-container :global(span),
+            .phrase-container :global(div) {
+              font-size: 1.5rem !important;
+            }
+          }
+
+          /* Estilos para la sección de ScrollVelocity */
+          .scroll-velocity-section {
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            padding: 3rem 0;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+            overflow: hidden;
+          }
+
+          .section-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #1e88e5;
+          }
+
+          html[data-theme='dark'] .section-title {
+            color: #64b5f6;
+          }
+
+          .text-velocity-item {
+            margin: 0 1.5rem;
+            color: #333;
+            background: linear-gradient(90deg, #1e88e5, #26a69a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            padding: 0.5rem 1rem;
+            font-size: 3rem !important;
+            font-weight: 700 !important;
+          }
+
+          html[data-theme='dark'] .text-velocity-item {
+            background: linear-gradient(90deg, #64b5f6, #4db6ac);
+            -webkit-background-clip: text;
+            background-clip: text;
+          }
+
+          .velocity-parallax {
+            margin: 0.75rem 0;
+            padding: 0.5rem 0;
+          }
+
+          @media (max-width: 768px) {
+            .text-velocity-item {
+              font-size: 2rem !important;
+              margin: 0 0.75rem;
+            }
+
+            .section-title {
+              font-size: 1.75rem;
+            }
+
+            .scroll-velocity-section {
+              padding: 2rem 0;
+            }
+          }
+
+          /* Estilos para la sección de ScrollFloat */
+          .scroll-float-section {
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            padding: 3rem 0;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+            overflow: hidden;
+          }
+
+          .scroll-float-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+          }
+
+          .float-title-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+          }
+
+          .float-title-text {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #1e88e5;
+            text-align: center;
+          }
+
+          html[data-theme='dark'] .float-title-text {
+            color: #64b5f6;
+          }
+
+          @media (max-width: 768px) {
+            .float-title-text {
+              font-size: 2rem;
+            }
+
+            .scroll-float-section {
+              padding: 2rem 0;
+            }
+          }
+        </style>
+      </div>
+    </div>
+  </div></Layout
+>

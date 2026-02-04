@@ -1,0 +1,504 @@
+---
+import Header from '../components/header/Header.astro';
+import Footer from '../components/footer/Footer.astro';
+import NoiseEffect from '../components/noise/NoiseEffect.astro';
+import { SEO } from 'astro-seo';
+import { ViewTransitions } from 'astro:transitions';
+import '../styles/tailwind.css';
+import '../styles/base.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- Script para aplicar el tema inmediatamente antes de cualquier renderizado -->
+    <script is:inline>
+      // Aplicar el tema inmediatamente sin ocultar la página
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      // Usar preferencia guardada o seguir el sistema
+      const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+
+      // Almacenar el tema actual en una variable global para acceso fácil
+      window.currentTheme = theme;
+
+      // Guardar si estamos usando el tema del sistema o una preferencia manual
+      window.usingSystemTheme = !savedTheme;
+
+      // Deshabilitar las transiciones durante la carga inicial
+      document.documentElement.classList.add('no-transitions');
+
+      // Prevenir el FOUC (Flash of Unstyled Content) y el salto del header
+      document.documentElement.style.visibility = 'hidden';
+
+      // Técnica para establecer el header en su posición final antes de mostrar la página
+      window.addEventListener('DOMContentLoaded', () => {
+        // Asegurar que el header esté en su posición final
+        const header = document.getElementById('site-header');
+        if (header) {
+          // Forzar estilos iniciales sin animación
+          header.style.transform = 'none';
+          header.style.transition = 'none';
+        }
+
+        // Mostrar la página una vez que todo esté establecido
+        setTimeout(() => {
+          document.documentElement.style.visibility = '';
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              document.documentElement.classList.remove('no-transitions');
+            });
+          });
+        }, 10); // Un retraso mínimo para asegurar que todo esté en posición
+      });
+
+      // Detector de cambios en la preferencia del sistema operativo
+      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+      function handleSystemThemeChange(e) {
+        // Solo cambiar el tema si estamos usando el tema del sistema
+        if (window.usingSystemTheme) {
+          const newTheme = e.matches ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', newTheme);
+          window.currentTheme = newTheme;
+
+          // Actualizar visualmente el switch si existe
+          syncThemeUI();
+        }
+      }
+
+      // Sincronizar la UI según el tema actual
+      function syncThemeUI() {
+        const themeSwitch = document.querySelector('.theme-switch__checkbox');
+        if (themeSwitch instanceof HTMLInputElement) {
+          const currentTheme = document.documentElement.getAttribute('data-theme');
+          themeSwitch.checked = currentTheme === 'dark';
+
+          const switchLabel = themeSwitch.closest('.theme-switch');
+          if (switchLabel) {
+            switchLabel.setAttribute('aria-checked', (currentTheme === 'dark').toString());
+          }
+
+          // Actualizar iconos
+          const sunIcon = document.querySelector('.sun-icon');
+          const moonIcon = document.querySelector('.moon-icon');
+
+          if (sunIcon && moonIcon) {
+            if (currentTheme === 'dark') {
+              sunIcon.style.opacity = '1';
+              sunIcon.style.transform = 'scale(1)';
+              moonIcon.style.opacity = '0';
+              moonIcon.style.transform = 'scale(0)';
+            } else {
+              sunIcon.style.opacity = '0';
+              sunIcon.style.transform = 'scale(0)';
+              moonIcon.style.opacity = '1';
+              moonIcon.style.transform = 'scale(1)';
+            }
+          }
+        }
+      }
+
+      // Escuchar cambios en el tema del sistema
+      prefersDarkScheme.addEventListener('change', handleSystemThemeChange);
+
+      // Función para sincronizar el tema durante las transiciones
+      function syncThemeAcrossPages() {
+        const savedTheme = localStorage.getItem('theme');
+        window.usingSystemTheme = !savedTheme;
+
+        if (savedTheme) {
+          // Si hay una preferencia guardada, usarla
+          document.documentElement.setAttribute('data-theme', savedTheme);
+          window.currentTheme = savedTheme;
+        } else {
+          // Seguir el tema del sistema
+          const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const systemTheme = systemPrefersDark ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', systemTheme);
+          window.currentTheme = systemTheme;
+        }
+
+        // Sincronizar la UI
+        syncThemeUI();
+      }
+
+      // Ejecutar la sincronización del tema en cada navegación
+      document.addEventListener('astro:after-swap', syncThemeAcrossPages);
+      document.addEventListener('astro:page-load', syncThemeAcrossPages);
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <SEO
+      title={title}
+      description={description || 'Agente RAG: Soluciones IA para PyMEs en Chile.'}
+      canonical={Astro.url.href}
+      openGraph={{
+        basic: {
+          title: title,
+          type: 'website',
+          image: `${Astro.url.origin}/og-image.png`,
+          url: Astro.url.href,
+        },
+        image: { alt: title },
+      }}
+      twitter={{ card: 'summary_large_image' }}
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Añadir ViewTransitions para manejar las transiciones entre páginas -->
+    <ViewTransitions />
+  </head>
+  <body>
+    <Header transition:persist="header" />
+    <!-- Contenedor independiente de blur que sigue al header -->
+    <div id="header-blur-container" class="header-blur-container">
+      <NoiseEffect targetId="header-blur-container" patternAlpha={30} />
+      <!-- Este div estará conectado con el menú hamburguesa para transformarse -->
+    </div>
+    <!-- Espaciador para compensar la altura fija del header -->
+    <div id="header-compensation" style="height: 80px; width: 100%;"></div>
+    <div class="layout">
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+
+    <style is:global>
+      /* Variables base */
+      :root {
+        --accent: 136, 58, 234;
+        --accent-light: 224, 204, 250;
+        --accent-dark: 49, 10, 101;
+        --text-primary: #111;
+        --background-header: rgba(255, 255, 255, 0);
+        --background-footer: #16002c;
+        --text-footer: #00fff2;
+        --footer-bg: rgba(2, 0, 61, 0.486);
+        --footer-text: #e0e0e0;
+        --bg-blur: none;
+      }
+
+      /* Dark theme */
+      html[data-theme='dark'] {
+        --background-footer: #000000;
+        --footer-bg: rgba(2, 0, 61, 0.8);
+        --footer-text: #ffffff;
+      }
+
+      /* Deshabilitar transiciones durante la carga inicial */
+      html.no-transitions *,
+      html.no-transitions *:before,
+      html.no-transitions *:after {
+        transition: none !important;
+        animation: none !important;
+      }
+
+      /* Estilos base */
+      html {
+        font-family: system-ui, sans-serif;
+        min-height: 100vh;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        /* Eliminar los fondos con gradientes y dejar un fondo blanco simple */
+        background: #ffffff;
+        background-attachment: scroll;
+        backdrop-filter: blur(var(--bg-blur));
+        transition: background 0.3s ease;
+      }
+
+      /* Dark theme */
+      html[data-theme='dark'] body {
+        /* Eliminar los fondos con gradientes y dejar un fondo oscuro simple */
+        background: #000000;
+        background-attachment: scroll;
+        --text-primary: #ffffff;
+        --background-header: rgba(18, 18, 18, 0.1);
+        --background-footer: #000000;
+      }
+
+      .layout {
+        position: relative;
+        min-height: 100vh;
+        width: 100%;
+      }
+      main {
+        position: relative;
+        z-index: 1;
+      }
+
+      main {
+        flex-grow: 1;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+      }
+
+      /* Media queries */
+      @media (max-width: 768px) {
+        main {
+          padding: 0.5rem;
+        }
+      }
+
+      /* Estilos para corrección del header en transiciones */
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation: none;
+        mix-blend-mode: normal;
+      }
+
+      ::view-transition-old(header),
+      ::view-transition-new(header) {
+        animation: none;
+      }
+
+      /* ----- Estilos del contenedor de blur para el header ----- */
+      .header-blur-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 80px; /* Altura inicial igual al header */
+        z-index: 9; /* Justo debajo del header (z-index: 10) */
+        pointer-events: none; /* Permite que los eventos pasen al contenido */
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efecto elástico para la transición */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      /* Contenido interno del blur que imita la forma exacta del header */
+      .header-blur-container::before {
+        content: '';
+        width: 80%; /* Mismo ancho que header-inner */
+        max-width: 790px; /* Mismo max-width que header-inner */
+        height: 60px; /* Misma altura que header-inner */
+        margin: 0.8rem auto 0; /* Mismo margen que header-inner */
+        border-radius: 30px; /* Mismo radio que header-inner */
+        background-color: rgba(30, 30, 50, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efecto elástico */
+      }
+
+      /* Versión del contenedor cuando el header está en modo sticky */
+      .header-blur-container.sticky {
+        height: 40px; /* Misma altura que el header en sticky */
+        margin-top: 0; /* Eliminar cualquier margen superior */
+      }
+
+      /* Ajuste del contenido interno en modo sticky */
+      .header-blur-container.sticky::before {
+        height: 40px; /* Misma altura que header-inner en sticky */
+        width: 80%; /* Mantener el mismo ancho que en estado normal */
+        max-width: 790px; /* Mantener el mismo max-width que en estado normal */
+        margin: 0 auto; /* Mismo margen que header-inner en sticky */
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      /* Versión del contenedor cuando el menú hamburguesa está expandido */
+      .header-blur-container.expanded {
+        height: 800px !important; /* Altura fija para el modo expandido */
+      }
+
+      /* Ajuste del contenido interno cuando está expandido */
+      .header-blur-container.expanded::before {
+        height: 40px !important; /* Mantener la misma altura que header-inner */
+        max-height: none !important;
+        min-height: 40px !important; /* Coincide con altura del header */
+        transition: height 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
+      }
+
+      /* Modo claro */
+      html[data-theme='light'] .header-blur-container::before {
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(193, 194, 187, 0.116);
+      }
+
+      /* Modo oscuro */
+      html[data-theme='dark'] .header-blur-container::before {
+        background-color: rgba(30, 30, 50, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.05);
+      }
+
+      /* Modo oscuro + sticky */
+      html[data-theme='dark'] .header-blur-container.sticky::before {
+        background-color: rgba(12, 12, 14, 0.25);
+      }
+
+      /* Modo claro + sticky */
+      html[data-theme='light'] .header-blur-container.sticky::before {
+        background-color: rgba(255, 255, 255, 0.4);
+      }
+
+      /* Ocultar cuando el header está oculto */
+      .header-blur-container.hidden {
+        transform: translateY(-100%);
+      }
+
+      /* Media Query para Móvil */
+      @media (max-width: 900px) {
+        /* Ajustar header-blur-container para móvil */
+        .header-blur-container {
+          height: auto; /* Permitir que la altura se base en el pseudo-elemento */
+        }
+
+        /* Ajuste del contenido interno para móvil */
+        .header-blur-container::before {
+          height: 60px; /* Misma altura que header-inner en móvil */
+          width: 95%; /* Mismo ancho que header-inner en móvil */
+          margin: 0 auto; /* Sin margen superior en móvil */
+          border-radius: 30px;
+        }
+
+        /* Ajustes específicos para el blur en modo sticky en móvil */
+        .header-blur-container.sticky::before {
+          width: 95%; /* Mismo ancho que header-inner en sticky para móvil */
+          height: 40px; /* Altura inicial en sticky */
+          margin-top: 0; /* Eliminar espacio superior en modo sticky */
+        }
+
+        /* Sobrescribir la altura para el caso expandido en móvil */
+        .header-blur-container.expanded {
+          height: 350px !important; /* Altura fija en móvil */
+        }
+
+        /* Asegurar que el blur tenga la altura correcta cuando está expandido en móvil */
+        .header-blur-container.expanded::before {
+          height: 40px !important; /* Altura del header en modo sticky */
+          max-height: none !important;
+          min-height: 330px !important;
+          margin-top: 0 !important; /* Eliminar espacio superior en modo expandido */
+        }
+      }
+    </style>
+
+    <script is:inline>
+      // Ajustar el espaciador del header para móviles
+      function adjustHeaderSpace() {
+        const spacer = document.getElementById('header-compensation');
+        if (spacer) {
+          spacer.style.height = window.innerWidth <= 768 ? '70px' : '80px';
+        }
+      }
+
+      // Script para sincronizar el contenedor de blur con el header
+      function setupHeaderBlurContainer() {
+        const headerBlurContainer = document.getElementById('header-blur-container');
+        const header = document.getElementById('site-header');
+        const hamburgerInput = document.querySelector('.hamburger input');
+
+        if (!headerBlurContainer || !header) return;
+
+        // Función para actualizar el contenedor de blur según el estado del header
+        const updateBlurContainer = () => {
+          // Sincronizar con estado sticky
+          if (header.classList.contains('sticky')) {
+            headerBlurContainer.classList.add('sticky');
+          } else {
+            headerBlurContainer.classList.remove('sticky');
+          }
+
+          // Sincronizar con estado expandido
+          if (header.classList.contains('is-expanded')) {
+            headerBlurContainer.classList.add('expanded');
+          } else {
+            headerBlurContainer.classList.remove('expanded');
+          }
+
+          // Sincronizar con estado oculto
+          if (header.classList.contains('hide')) {
+            headerBlurContainer.classList.add('hidden');
+          } else {
+            headerBlurContainer.classList.remove('hidden');
+          }
+        };
+
+        // Observar cambios en las clases del header
+        const headerObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'class') {
+              updateBlurContainer();
+            }
+          });
+        });
+
+        // Iniciar observación del header
+        headerObserver.observe(header, { attributes: true });
+
+        // También conectar directamente al evento change del hamburger
+        if (hamburgerInput && hamburgerInput instanceof HTMLInputElement) {
+          hamburgerInput.addEventListener('change', () => {
+            if (hamburgerInput.checked) {
+              headerBlurContainer.classList.add('expanded');
+            } else {
+              headerBlurContainer.classList.remove('expanded');
+            }
+          });
+        }
+
+        // Estado inicial
+        setTimeout(updateBlurContainer, 100);
+
+        // También actualizar cuando cambie el tamaño de la ventana
+        window.addEventListener('resize', updateBlurContainer);
+
+        // Escuchar eventos de scroll para asegurar sincronización
+        window.addEventListener(
+          'scroll',
+          () => {
+            requestAnimationFrame(updateBlurContainer);
+          },
+          { passive: true }
+        );
+      }
+
+      // Ejecutar al cargar y cuando cambie el tamaño de la ventana
+      window.addEventListener('DOMContentLoaded', () => {
+        adjustHeaderSpace();
+        setupHeaderBlurContainer();
+      });
+      window.addEventListener('resize', adjustHeaderSpace);
+      document.addEventListener('astro:page-load', () => {
+        adjustHeaderSpace();
+        setupHeaderBlurContainer();
+      });
+      document.addEventListener('astro:after-swap', () => {
+        adjustHeaderSpace();
+        setupHeaderBlurContainer();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+/* Tailwind CSS directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --text-color: #171717; /* Color para tema claro (neutral-900) */
+  }
+
+  html.dark {
+    --text-color: #ffffff; /* Color para tema oscuro (white) */
+  }
+
+  /* Forzar color blanco para textos en modo oscuro */
+  .dark .cover-text-dark {
+    color: white !important;
+  }
+}
+
+@layer utilities {
+  .animate-aurora {
+    animation: aurora 60s linear infinite;
+  }
+
+  @keyframes aurora {
+    from {
+      background-position:
+        50% 50%,
+        50% 50%;
+    }
+    to {
+      background-position:
+        350% 50%,
+        350% 50%;
+    }
+  }
+}

@@ -1,0 +1,217 @@
+---
+// Constante phi para cálculos de proporción áurea
+const phi = 1.618033988749895;
+
+// Propiedades para controlar el título
+export interface Props {
+  position?: 'top' | 'center' | 'left' | 'right' | 'custom';
+  alignment?: 'left' | 'center' | 'right';
+  offsetTop?: string;
+  offsetLeft?: string;
+  fontSize?: string;
+  layout?: 'horizontal' | 'vertical';
+  className?: string;
+}
+
+// Valores por defecto
+const {
+  position = 'top',
+  alignment = 'center',
+  offsetTop = '120px',
+  offsetLeft = '0px',
+  fontSize = 'clamp(2rem, 5vw, 3.5rem)',
+  layout = 'horizontal',
+  className = '',
+} = Astro.props;
+
+// Calcula estilos de posicionamiento basados en las props
+let justifyContent = 'center';
+let alignItems = 'center';
+let textAlign = 'center';
+let paddingTop = offsetTop;
+let paddingLeft = offsetLeft;
+let marginLeft = 'auto';
+let marginRight = 'auto';
+
+// Configuración de posición
+if (position === 'top') {
+  justifyContent = 'flex-start';
+} else if (position === 'left') {
+  alignItems = 'flex-start';
+  marginLeft = '0';
+  marginRight = 'auto';
+} else if (position === 'center') {
+  alignItems = 'center';
+  justifyContent = 'center';
+  // Para centrado automático, anulamos el paddingLeft
+  paddingLeft = '0';
+  marginLeft = 'auto';
+  marginRight = 'auto';
+}
+
+// Alineación del texto
+if (alignment === 'left') {
+  textAlign = 'left';
+} else if (alignment === 'right') {
+  textAlign = 'right';
+  alignItems = 'flex-end';
+} else if (alignment === 'center') {
+  textAlign = 'center';
+}
+---
+
+<!-- Contenedor del título -->
+<div
+  id="hero-title-container"
+  class={`hero-title-container ${className} ${position} ${layout}`}
+  style={`padding-top: ${paddingTop}; padding-left: ${paddingLeft}; margin-left: ${marginLeft}; margin-right: ${marginRight};`}
+>
+  <h1 id="hero-title" class={`hero-title ${alignment}`}>
+    <slot />
+  </h1>
+</div>
+
+<style define:vars={{ fontSize }}>
+  /* Variables y estilos base */
+  :root {
+    --phi: 1.618033988749895;
+    --base-size: 2.5rem;
+    --title-size: calc(var(--base-size) * var(--phi));
+    --text-shadow-base: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --text-shadow-title: 0 4px 6px rgba(0, 0, 0, 0.25);
+    --title-color-light: #000000;
+    --title-color-dark: #ffffff;
+    --title-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --title-transition: all 0.3s ease;
+  }
+
+  /* Contenedor principal del título */
+  .hero-title-container {
+    width: 100%;
+    position: relative;
+    z-index: 10;
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Posicionamiento */
+  .hero-title-container.top {
+    justify-content: flex-start;
+  }
+
+  .hero-title-container.left {
+    align-items: flex-start;
+  }
+
+  .hero-title-container.right {
+    align-items: flex-end;
+  }
+
+  /* Configuración de layout */
+  .hero-title-container.vertical .hero-title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%; /* Asegurar que ocupe todo el ancho disponible */
+  }
+
+  /* Alineación específica para layout vertical */
+  .hero-title-container.vertical .hero-title.center {
+    align-items: center; /* Centrar elementos cuando está en layout vertical y alineación center */
+  }
+
+  .hero-title-container.horizontal .hero-title {
+    flex-direction: row;
+  }
+
+  /* Estilos base del título */
+  .hero-title {
+    color: var(--title-color-dark);
+    text-shadow: var(--title-shadow);
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0;
+    max-width: 1000px;
+    font-size: var(--fontSize);
+  }
+
+  .hero-title.left {
+    text-align: left;
+  }
+
+  .hero-title.center {
+    text-align: center;
+  }
+
+  .hero-title.right {
+    text-align: right;
+  }
+
+  /* Adaptación para modo claro */
+  html[data-theme='light'] .hero-title {
+    color: var(--title-color-light);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Estilos para elementos destacados dentro del título */
+  :global(.hero-title .highlight),
+  :global(.hero-title .highlight-span) {
+    /* Eliminar el fondo naranja para que no interfiera con el azul claro */
+    /* background: linear-gradient(to right, #ff3d00, #ff9e00); */
+    /* Permitir que el componente HighlightSpan controle estos estilos */
+    display: inline;
+    vertical-align: baseline;
+  }
+
+  /* Versión para modo oscuro */
+  html[data-theme='dark'] :global(.hero-title .highlight),
+  html[data-theme='dark'] :global(.hero-title .highlight-span) {
+    /* background: linear-gradient(to right, #ff4500, #ffcc00); */
+    /* Eliminar el fondo naranja para modo oscuro */
+    text-shadow: none; /* Eliminar sombra de texto naranja */
+  }
+
+  /* Gradiente de texto */
+  :global(.hero-title .gradient-text),
+  :global(.hero-title [class*='gradient-text']) {
+    background-image: linear-gradient(90deg, #00a6ff, #f700f3, #fe6100);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    display: inline-block;
+  }
+
+  html[data-theme='dark'] :global(.hero-title .gradient-text),
+  html[data-theme='dark'] :global(.hero-title [class*='gradient-text']) {
+    filter: drop-shadow(0 0 12px rgba(247, 0, 243, 0.3));
+  }
+
+  /* Estilo específico para FlipWords dentro del título */
+  :global(.hero-title .whole-gradient) {
+    background-image: linear-gradient(90deg, #00a6ff, #f700f3, #fe6100);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+  }
+
+  /* Estilos responsivos */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: clamp(2rem, 4vw, 2.5rem);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title {
+      font-size: clamp(2rem, 5vw, 2rem);
+    }
+
+    .hero-title-container {
+      padding: 1.5rem 0.75rem;
+    }
+  }
+</style>

@@ -1,0 +1,1253 @@
+---
+// 1. Obtener la ruta actual
+let currentPage = '/';
+try {
+  currentPage = Astro.url.pathname;
+} catch (e) {
+  console.error(e);
+}
+
+// 2. Interfaz y Enlaces con data-hover-text
+interface NavLink {
+  href: string;
+  text: string;
+  hoverText: string;
+}
+const navLinks: NavLink[] = [
+  { href: '/', text: 'Agente RAG', hoverText: 'Iniciar 🚀' },
+  { href: '/nosotros', text: 'Nosotros', hoverText: 'IA RAG 😊' },
+  { href: '/contacto', text: 'Contacto', hoverText: 'Hola! 😁' },
+  { href: '/blog', text: 'Blog', hoverText: 'Lee 🤓' },
+  { href: '/faq', text: 'FAQ', hoverText: 'Eeh.. 🧐' },
+];
+
+// 3. Función Active
+function isLinkActive(linkHref: string, currentPath: string): boolean {
+  if (linkHref === '/') return currentPath === '/';
+  return currentPath === linkHref || currentPath.startsWith(linkHref + '/');
+}
+
+// 4. Importar los componentes
+import SplashCursor from '../splash/SplashCursor.jsx';
+---
+
+<header
+  id="site-header"
+  class="site-header-surprise"
+  transition:name="header"
+  transition:animate="none"
+>
+  <!-- Spacer invisible -->
+  <div class="header-spacer"></div>
+
+  <!-- SplashCursor como overlay independiente (Implementación Original) -->
+  <div class="splash-cursor-overlay">
+    <SplashCursor
+      client:load
+      headerOnly={true}
+      targetElementId="site-header"
+      disableOnMobile={true}
+    />
+  </div>
+
+  <!-- Contenedor interno (controla altura y estilos) -->
+  <div class="header-inner">
+    <!-- Aurora Wrapper -->
+    <div class="aurora-wrapper">
+      <!-- Componente Aurora si aplica -->
+    </div>
+
+    <!-- Contenedor Principal del contenido -->
+    <div class="container">
+      <!-- Logo (order 1 móvil) -->
+      <a href="/" class="logo" aria-label="Agente RAG Inicio">
+        <span aria-hidden="true" class="logo-text">{'{AR}'}</span>
+      </a>
+
+      <!-- Icono hamburguesa (order 2 móvil) -->
+      <label class="hamburger" aria-label="Abrir menú">
+        <input type="checkbox" aria-hidden="true" />
+        <svg viewBox="0 0 32 32">
+          <path
+            class="line line-top-bottom"
+            d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+          ></path>
+          <path class="line" d="M7 16 27 16"></path>
+        </svg>
+      </label>
+
+      <!-- Theme switcher (order 3 móvil, posicionado absoluto escritorio) -->
+      <div class="theme-container">
+        <label aria-label="Cambiar tema" class="theme-switch">
+          <input
+            type="checkbox"
+            class="theme-switch__checkbox"
+            aria-checked="false"
+            role="switch"
+          />
+          <div class="theme-icons">
+            <svg
+              class="sun-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"
+              ></line><line x1="12" y1="21" x2="12" y2="23"></line><line
+                x1="4.22"
+                y1="4.22"
+                x2="5.64"
+                y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line
+                x1="1"
+                y1="12"
+                x2="3"
+                y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line
+                x1="4.22"
+                y1="19.78"
+                x2="5.64"
+                y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg
+            >
+            <svg
+              class="moon-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg
+            >
+          </div>
+        </label>
+      </div>
+
+      <!-- Navegación Principal -->
+      <nav class="main-navigation-surprise" aria-label="Navegación principal">
+        {
+          navLinks.map((link, index) => {
+            // index para animación
+            const isActive = isLinkActive(link.href, currentPage);
+            return (
+              <div class="nav-item-surprise" style={`--item-index: ${index}`}>
+                <a
+                  href={link.href}
+                  class:list={['nav-link-wrapper', { active: isActive }]}
+                  data-astro-prefetch
+                  data-hover-text={link.hoverText}
+                >
+                  <span class="nav-text">{link.text}</span>
+                </a>
+              </div>
+            );
+          })
+        }
+      </nav>
+    </div>
+    <!-- Fin .container -->
+  </div>
+  <!-- Fin .header-inner -->
+</header>
+
+<style>
+  /* --- Variables (Originales + RGB para rgba) --- */
+  :root {
+    --active-color: rgb(0, 0, 0);
+    --text-primary: white;
+    --btn-text-color: white;
+    --hover-text-color: rgb(255, 255, 255);
+    --logo-color: white;
+    --header-bg: rgba(21, 21, 24, 0); /* Aumentado la opacidad para mejor contraste */
+    --header-border: rgba(255, 255, 255, 0);
+    --border-glow: 0 0 10px rgba(255, 255, 255, 0);
+    --highlight-color: rgba(255, 255, 255, 0.2);
+    --header-sticky-bg: rgba(255, 255, 255, 0); /* Aumentado también para sticky */
+    --text-primary-rgb: 255, 255, 255;
+  }
+  html[data-theme='light'],
+  body[data-theme='light'],
+  :root[data-theme='light'],
+  [data-theme='light'] {
+    --hover-text-color: rgb(0, 0, 0);
+    --header-sticky-bg: rgba(255, 255, 255, 0); /* Mayor opacidad para modo claro en sticky */
+    --header-bg: rgba(255, 255, 255, 0); /* Mayor opacidad para modo claro */
+    --text-primary: black;
+    --logo-color: black;
+    --text-primary-rgb: 0, 0, 0;
+  }
+
+  /* --- Estilos Base (Escritorio - Mantenido de Original) --- */
+  .site-header-surprise {
+    /* Clase principal original */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10; /* Reducido para que esté por encima del HeroHighlight pero no tan alto */
+    height: 80px; /* Altura inicial original - debe coincidir con header-blur-container */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    pointer-events: all;
+    contain: layout size;
+    transform: translateY(0);
+    animation: none !important;
+    transition:
+      transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+      /* Efecto elástico en transform */ height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important; /* Efecto elástico en height */
+  }
+  .header-spacer {
+    height: 0.8rem;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  /* Estilos Overlay SplashCursor (Original) */
+  .splash-cursor-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Mantener ancho completo para el splash cursor */
+    height: 100%;
+    z-index: 5; /* Debajo del contenido interactivo */
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  .header-inner {
+    /* Contenedor visual (Original + Modificaciones) */
+    background-color: transparent; /* Aumentado la opacidad para más contraste */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: transparent;
+    border-radius: 30px;
+    padding: 0;
+    height: 60px; /* Altura interna original */
+    display: flex;
+    align-items: center; /* Centrar .container */
+    width: 80%; /* Reducir el ancho para tener márgenes laterales */
+    max-width: 790px; /* Ancho máximo */
+    margin: 0.8rem auto 0; /* Margen superior original y centrado horizontal */
+    position: relative; /* Contexto para theme-container */
+    isolation: isolate; /* Añadido para crear un contexto de apilamiento independiente */
+    /* overflow: hidden; <<-- NO USAR */
+    transition:
+      height 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+      /* Efecto elástico */ margin 0.3s ease !important,
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .container {
+    /* Contenido (Original) */
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto; /* Centrado interno */
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    height: 100%; /* Ocupa altura de .header-inner */
+    position: relative;
+    z-index: 10; /* Contenido sobre splash overlay */
+  }
+
+  .logo {
+    /* Logo (Original) */
+    display: flex;
+    align-items: center;
+    height: 100%;
+    z-index: 5;
+    margin-right: 2rem;
+    flex-shrink: 0;
+    padding-left: 0;
+  }
+  .logo-text {
+    /* Texto logo (Original) */
+    color: var(--logo-color, white);
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    letter-spacing: -0.5px;
+    transition: color 0.3s ease;
+  }
+
+  /* Navegación Escritorio (Original) */
+  .main-navigation-surprise {
+    position: relative; /* Original */
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 100%;
+    flex-grow: 1;
+    gap: 2rem;
+    z-index: 5;
+  }
+  .nav-item-surprise {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Reserva espacio consistente para ambos textos */
+  .nav-item-surprise::before {
+    content: '';
+    display: block;
+    height: 0;
+    width: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* Estilos mejorados para data-hover-text (efecto de texto hover) */
+  .nav-link-wrapper {
+    position: relative;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: clamp(
+      0.55rem,
+      0.5rem + 0.5vw,
+      1.3rem
+    ); /* Reducido de 0.85rem a 0.75rem y max de 1rem a 0.9rem */
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    padding: 0.5rem 1.1rem;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: color 0.3s ease;
+    overflow: hidden;
+    min-width: max-content;
+  }
+
+  /* Texto principal que se muestra normalmente */
+  .nav-text {
+    display: inline-block;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+    position: relative;
+    min-width: max-content; /* Asegura que el contenedor se ajuste al texto */
+  }
+
+  /* Texto alternativo que aparece al hacer hover */
+  .nav-link-wrapper::before {
+    content: attr(data-hover-text);
+    position: absolute;
+    top: 50%;
+    left: 0; /* Asegura alineación con el contenedor */
+    width: 100%;
+    transform: translateY(100%);
+    opacity: 0;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+    pointer-events: none;
+    font-weight: 700;
+    font-size: clamp(0.85rem, 0.75rem + 0.6vw, 1rem); /* Mismo tamaño que el texto principal */
+    color: #38bdf8; /* Color del texto hover */
+    text-align: center; /* Centra el texto en el espacio reservado */
+    white-space: nowrap; /* Evita saltos de línea */
+    padding: 0 0.25rem; /* Pequeño padding interno para evitar cortes */
+  }
+
+  /* Efecto al pasar el mouse */
+  .nav-link-wrapper:hover .nav-text {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  .nav-link-wrapper:hover::before {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+
+  /* Hamburguesa (oculta escritorio - Original) */
+  .hamburger {
+    display: none;
+    position: relative; /* z-index: -1; <<-- Quitar z-index negativo */
+    z-index: 1010;
+    cursor: pointer;
+  }
+  /* Estilos internos hamburguesa (Original) */
+  .hamburger input {
+    opacity: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+  }
+  .hamburger svg {
+    width: 32px;
+    height: 32px;
+    stroke: var(--text-primary);
+    stroke-width: 3;
+    transition: transform 0.3s ease;
+  }
+  .hamburger .line {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition:
+      stroke-dasharray 0.4s,
+      stroke-dashoffset 0.4s;
+  }
+  .hamburger .line-top-bottom {
+    stroke-dasharray: 12 63;
+  }
+  .hamburger input:checked + svg {
+    transform: rotate(45deg);
+  }
+  .hamburger input:checked + svg .line-top-bottom {
+    stroke-dashoffset: -62px;
+  }
+
+  /* Theme Switcher (Absoluto escritorio - Original + z-index) */
+  .theme-container {
+    position: absolute;
+    right: 30px;
+    top: 0;
+    bottom: 0;
+    height: 100%; /* Original */
+    display: flex;
+    align-items: center;
+    z-index: 1001; /* Alto z-index */
+  }
+  /* Resto theme switcher (Original) */
+  .theme-switch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    height: 100%;
+  }
+  .theme-switch__checkbox {
+    opacity: 0;
+    position: absolute;
+    height: 0;
+    width: 0;
+  }
+  .theme-icons {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+  }
+  .theme-icons:hover {
+    transform: scale(1.2);
+  }
+  .sun-icon,
+  .moon-icon {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  html[data-theme='dark'] .sun-icon {
+    opacity: 1;
+    transform: scale(1);
+    color: #fff;
+  }
+  html[data-theme='dark'] .moon-icon {
+    opacity: 0;
+    transform: scale(0);
+  }
+  html[data-theme='light'] .sun-icon {
+    opacity: 0;
+    transform: scale(0);
+  }
+  html[data-theme='light'] .moon-icon {
+    opacity: 1;
+    transform: scale(1);
+    color: #000;
+  }
+
+  /* --- Estilos Header en Scroll (Original) --- */
+  .site-header-surprise.sticky {
+    height: 40px; /* Altura reducida para coincidir con el contenedor de blur */
+    margin-top: 0; /* Asegurar que no haya margen superior */
+    top: 0; /* Posicionar en la parte superior sin espacios */
+  }
+
+  /* Permitir específicamente que el header se expanda en modo sticky cuando tiene la clase is-expanded */
+  .site-header-surprise.sticky.is-expanded .header-inner {
+    height: auto !important; /* Anular la altura fija de 40px para permitir que se expanda */
+    background-color: transparent;
+    min-height: 40px; /* Asegurar altura mínima */
+  }
+
+  /* Asegurar que el container siga la altura del header en modo expandido */
+  .site-header-surprise.sticky.is-expanded .container {
+    height: auto; /* Permitir altura automática */
+    min-height: 40px; /* Mantener altura mínima */
+  }
+
+  .site-header-surprise.sticky .container {
+    height: 40px;
+  }
+
+  .site-header-surprise.hide {
+    transform: translateY(-100%) !important;
+  }
+
+  /* --- Media Query para Móvil (< 900px) --- */
+  @media (max-width: 900px) {
+    /* Ajustar altura header principal en móvil si es necesario */
+    .site-header-surprise {
+      height: auto; /* Permitir que la altura se base en .header-inner */
+    }
+    .header-inner {
+      height: 60px; /* Altura inicial/colapsada móvil */
+      margin: 0 auto; /* Sin margen superior en móvil por defecto */
+      align-items: flex-start; /* Alinear .container (fila sup.) arriba */
+      border-radius: 30px; /* Opcional: quitar borde redondeado en móvil */
+      width: 95%; /* Ancho por defecto en móvil */
+      /* La transición de altura ya está definida */
+    }
+
+    /* Ajustes específicos para el header en modo sticky en móvil */
+    .site-header-surprise.sticky .header-inner {
+      width: 95%; /* Ancho mayor en modo sticky para móvil */
+      flex-wrap: wrap; /* Permitir que nav baje */
+      height: 40px; /* Altura inicial en sticky */
+      transition: height 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important; /* Asegurar transición */
+    }
+
+    /* Asegurar funcionamiento de expansión en sticky */
+    .site-header-surprise.sticky.is-expanded .header-inner {
+      height: auto !important; /* Prioridad alta para sobrescribir */
+    }
+
+    /* Asegurar que la navegación sea visible en modo expandido, incluso en sticky */
+    .site-header-surprise.sticky.is-expanded .main-navigation-surprise {
+      max-height: 70vh;
+      opacity: 1;
+      visibility: visible;
+      padding: 1.5rem 0 1rem 0;
+    }
+
+    .container {
+      padding: 0 15px;
+      justify-content: space-between !important;
+      flex-wrap: wrap; /* Permitir que nav baje */
+      height: 60px; /* Altura FIJA fila superior */
+      align-items: center; /* Alinear items fila superior */
+      width: 100%;
+      max-width: 100%;
+      margin: 0; /* Asegurar ancho completo */
+    }
+    .logo {
+      margin-right: 0;
+      order: 1;
+    }
+    .hamburger {
+      display: flex;
+      align-items: center;
+      order: 2;
+      margin-left: 0;
+      padding: 0 5px;
+    } /* Mostrar hamburguesa */
+    .theme-container {
+      position: relative; /* Parte del flujo normal */
+      right: auto;
+      top: auto;
+      bottom: auto;
+      order: 3; /* Orden derecha */
+      height: auto; /* Resetear altura fija */
+      z-index: 1020 !important; /* Asegurar clickabilidad */
+      pointer-events: auto !important; /* Doble asegurar */
+    }
+    .theme-switch {
+      /* Asegurar clickabilidad del label */
+      pointer-events: auto !important;
+      height: auto; /* Resetear altura */
+    }
+    .theme-switch__checkbox,
+    .theme-icons,
+    .sun-icon,
+    .moon-icon {
+      /* Y sus hijos */
+      pointer-events: auto !important;
+    }
+
+    /* Navegación Móvil (Expandible) */
+    .main-navigation-surprise {
+      display: flex;
+      flex-direction: column;
+      flex-basis: 100%;
+      order: 99; /* Abajo */
+      width: 100%;
+      height: auto;
+      gap: 0.5rem;
+      padding: 1rem 0 0.5rem 0;
+      align-items: center;
+      box-sizing: border-box;
+      /* Ocultar/Mostrar con max-height y opacity */
+      max-height: 0;
+      opacity: 0;
+      visibility: hidden;
+      overflow: hidden; /* Ocultar contenido INTERNO cuando colapsado */
+      transition:
+        max-height 0.4s ease-out,
+        opacity 0.3s ease-out 0.1s,
+        visibility 0s linear 0.4s,
+        padding 0.4s ease-out;
+    }
+    /* Clase .is-expanded añadida al HEADER (#site-header) por JS */
+    .site-header-surprise.is-expanded .main-navigation-surprise {
+      max-height: 70vh; /* Suficiente para transición */
+      opacity: 1;
+      visibility: visible;
+      padding: 1.5rem 0 1rem 0;
+      overflow: visible; /* Mostrar contenido */
+      transition:
+        max-height 0.4s ease-in,
+        opacity 0.3s ease-in,
+        visibility 0s linear 0s,
+        padding 0.4s ease-in;
+    }
+    /* Estilos Items y Links Móvil */
+    .nav-item-surprise {
+      width: 100%; /* En lugar de 80% para más espacio */
+      max-width: 250px; /* Máximo para evitar excesiva anchura en tablets */
+      text-align: center;
+      height: auto;
+    }
+    .nav-link-wrapper {
+      font-size: clamp(1rem, 0.9rem + 0.6vw, 1.2rem); /* Tamaño más grande en móvil */
+      padding: 0.8rem 1.5rem; /* Más padding horizontal en móvil */
+      justify-content: center;
+      width: 100%;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+    }
+    .nav-link-wrapper:hover,
+    .nav-link-wrapper:focus {
+      background-color: transparent;
+    }
+    .nav-link-wrapper.active {
+      color: #38bdf8;
+      background-color: rgba(56, 189, 248, 0.1);
+    }
+    .nav-link-wrapper::after {
+      display: none !important;
+    } /* Ocultar efecto hover escritorio */
+    .nav-link-wrapper {
+      width: 100%;
+      text-align: center;
+      justify-content: center;
+      padding: 0.8rem;
+    }
+
+    .nav-link-wrapper::before {
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: clamp(
+        1rem,
+        0.9rem + 0.6vw,
+        1.2rem
+      ); /* Mismo tamaño que el texto principal en móvil */
+    }
+  }
+  /* --- Fin Media Query --- */
+</style>
+
+<script is:inline>
+  // Estado global (adaptado de original y combinado)
+  window.headerState = window.headerState || {
+    isSticky: false,
+    lastScrollY: 0,
+    scrollDirection: 'up',
+    hideEnabled: true,
+    isExpanded: false, // Nuevo estado para menú móvil
+    collapsedHeight: 60, // Altura móvil colapsada
+    topRowHeight: 60, // Altura fila superior móvil
+    wasOnMobile: window.matchMedia('(max-width: 900px)').matches, // Nuevo
+    lastWidth: window.innerWidth, // Nuevo
+  };
+
+  function setupHeader() {
+    const header = document.getElementById('site-header');
+    const headerInner = header?.querySelector('.header-inner');
+    const hamburgerInput = header?.querySelector('.hamburger input');
+    const container = header?.querySelector('.container'); // Fila superior
+    const navElement = header?.querySelector('.main-navigation-surprise'); // Menú
+    const body = document.body; // Usado en lógica original de scroll
+    const headerBlurContainer = document.getElementById('header-blur-container'); // Referencia al contenedor de blur
+
+    if (!header || !headerInner || !hamburgerInput || !container || !navElement) {
+      console.error('Header elements missing for setup.');
+      return;
+    }
+
+    const mobileMediaQuery = window.matchMedia('(max-width: 900px)');
+
+    // Nueva función dedicada para limpieza completa
+    const resetNavigationCompletely = () => {
+      if (!(navElement instanceof HTMLElement)) return;
+
+      console.log('RESET: Complete navigation reset initiated');
+
+      // 1. Detener toda actividad del menú
+      const wasExpanded = window.headerState.isExpanded;
+      hamburgerInput.checked = false;
+      window.headerState.isExpanded = false;
+      hamburgerInput.setAttribute('aria-expanded', 'false');
+      header.classList.remove('is-expanded');
+
+      // 2. Ocultar y congelar inmediatamente para evitar parpadeos
+      navElement.style.cssText = `
+        display: none !important; 
+        position: static !important;
+        max-height: 0 !important; 
+        opacity: 0 !important; 
+        visibility: hidden !important; 
+        overflow: hidden !important;
+        transition: none !important;
+      `;
+
+      // 3. Restaurar estructura DOM original
+      const navContainer = navElement.querySelector('.nav-container');
+      if (navContainer) {
+        console.log('RESET: Removing nav-container and restoring children');
+        // Mover todos los hijos de vuelta al nav original
+        while (navContainer.firstChild) {
+          navElement.insertBefore(navContainer.firstChild, navContainer);
+        }
+        navContainer.remove();
+      }
+
+      // 4. Restaurar headerInner
+      if (headerInner instanceof HTMLElement) {
+        const isStickyNow = header.classList.contains('sticky');
+        headerInner.style.height = isStickyNow ? '40px' : '60px';
+        headerInner.style.margin = isStickyNow ? '0 auto' : '0.8rem auto 0';
+        headerInner.style.borderRadius = '30px';
+      }
+
+      // 5. Restaurar nav con estilos de escritorio limpios en 2 pasos
+      setTimeout(() => {
+        navElement.removeAttribute('style');
+
+        // Primero forzar estilos correctos explícitamente
+        if (!mobileMediaQuery.matches) {
+          navElement.style.cssText = `
+            display: flex !important;
+            flex-direction: row !important;
+            position: relative !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            max-height: none !important;
+            overflow: visible !important;
+            width: auto !important;
+            height: 100% !important;
+          `;
+        }
+
+        // Después dejar que CSS tome control con un delay
+        setTimeout(() => {
+          navElement.removeAttribute('style');
+          console.log('RESET: Navigation fully restored to CSS control');
+
+          // Después de que todo esté limpio, si estábamos en móvil y expandido,
+          // y seguimos en móvil, reexpandir el menú
+          if (wasExpanded && mobileMediaQuery.matches) {
+            expandHeader();
+          }
+        }, 150);
+      }, 50);
+
+      // 6. Notificar al blur container
+      if (headerBlurContainer) {
+        headerBlurContainer.classList.remove('expanded');
+      }
+    };
+
+    // --- Lógica Menú Expansible ---
+    const setHeaderHeight = (height) => {
+      if (headerInner instanceof HTMLElement) {
+        // SIEMPRE aplicar la altura calculada, sin condiciones restrictivas
+        headerInner.style.height = `${height}px`;
+
+        // Ajustar margen (sin cambios)
+        if (mobileMediaQuery.matches) {
+          headerInner.style.margin = '0 auto';
+        } else if (!header.classList.contains('sticky')) {
+          headerInner.style.margin = '0.8rem auto 0';
+        }
+      }
+    };
+
+    const expandHeader = () => {
+      if (
+        !(container instanceof HTMLElement) ||
+        !(navElement instanceof HTMLElement) ||
+        !mobileMediaQuery.matches
+      )
+        return;
+
+      // Calcular altura del menú
+      const wasHidden = navElement.style.visibility === 'hidden' || !navElement.style.visibility;
+      if (wasHidden) {
+        navElement.style.visibility = 'visible';
+        navElement.style.position = 'absolute';
+      }
+      const currentTopRowHeight = container.offsetHeight || window.headerState.topRowHeight;
+      const navScrollHeight = navElement.scrollHeight;
+      if (wasHidden) {
+        navElement.style.visibility = '';
+        navElement.style.position = '';
+      }
+
+      // Aplicar nueva configuración: el header mantiene su altura pero el nav se muestra debajo
+      if (headerInner instanceof HTMLElement) {
+        // No cambiamos la altura del header-inner
+        headerInner.style.borderBottomLeftRadius = '0';
+        headerInner.style.borderBottomRightRadius = '0';
+      }
+
+      // Posicionar el nav justo debajo del header usando valores estáticos precisos
+      if (navElement instanceof HTMLElement) {
+        navElement.style.position = 'fixed';
+
+        // Posición fija para modo sticky, sin importar el tamaño de pantalla
+        if (header.classList.contains('sticky')) {
+          navElement.style.top = '40px'; // Exactamente debajo del header sticky (40px altura)
+        } else if (mobileMediaQuery.matches) {
+          navElement.style.top = '60px'; // Altura del header en móvil
+        } else {
+          // En escritorio, usar la altura total incluyendo el margen superior
+          navElement.style.top = '80px'; // Altura total del header en escritorio (incluye margen)
+        }
+
+        navElement.style.left = '0';
+        navElement.style.width = '100%';
+        navElement.style.display = 'flex';
+        navElement.style.flexDirection = 'column';
+        navElement.style.alignItems = 'center';
+        navElement.style.zIndex = '8'; // Por debajo del header
+
+        // Crear fondo con blur para el menú
+        navElement.style.backdropFilter = 'blur(12px)';
+        navElement.style.webkitBackdropFilter = 'blur(12px)';
+        navElement.style.backgroundColor =
+          document.documentElement.dataset.theme === 'dark'
+            ? 'rgba(30, 30, 50, 0.2)'
+            : 'rgba(255, 255, 255, 0.2)';
+        navElement.style.borderBottomLeftRadius = '30px';
+        navElement.style.borderBottomRightRadius = '30px';
+        navElement.style.padding = '1rem 0';
+        navElement.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+
+        // Crear un "contenedor visual" del mismo ancho que el header
+        const headerWidth = mobileMediaQuery.matches ? '95%' : '80%';
+        const maxWidth = '790px';
+        navElement.style.maxWidth = '100%';
+
+        // Agregar un div contenedor interno para alinear con el ancho del header
+        let navContainer = navElement.querySelector('.nav-container');
+        if (!navContainer) {
+          navContainer = document.createElement('div');
+          navContainer.className = 'nav-container';
+          // Mover todos los hijos al contenedor
+          while (navElement.children.length > 0) {
+            navContainer.appendChild(navElement.children[0]);
+          }
+          navElement.appendChild(navContainer);
+        }
+
+        if (navContainer instanceof HTMLElement) {
+          navContainer.style.width = headerWidth;
+          navContainer.style.maxWidth = maxWidth;
+          navContainer.style.margin = '0 auto';
+          navContainer.style.display = 'flex';
+          navContainer.style.flexDirection = 'column';
+          navContainer.style.alignItems = 'center';
+        }
+      }
+
+      header.classList.add('is-expanded'); // Añadir clase al HEADER
+      window.headerState.isExpanded = true;
+
+      // Notificar al contenedor de blur
+      if (headerBlurContainer) {
+        headerBlurContainer.classList.add('expanded');
+      }
+    };
+
+    const collapseHeader = () => {
+      header.classList.remove('is-expanded'); // Quitar clase del HEADER
+
+      // Restaurar header-inner
+      if (headerInner instanceof HTMLElement) {
+        headerInner.style.borderBottomLeftRadius = '30px';
+        headerInner.style.borderBottomRightRadius = '30px';
+      }
+
+      // Ocultar nav
+      if (navElement instanceof HTMLElement) {
+        navElement.style.position = '';
+        navElement.style.top = '';
+        navElement.style.left = '';
+        navElement.style.backdropFilter = '';
+        navElement.style.webkitBackdropFilter = '';
+        navElement.style.backgroundColor = '';
+        navElement.style.borderBottomLeftRadius = '';
+        navElement.style.borderBottomRightRadius = '';
+        navElement.style.boxShadow = '';
+      }
+
+      window.headerState.isExpanded = false;
+
+      // Notificar al contenedor de blur
+      if (headerBlurContainer) {
+        headerBlurContainer.classList.remove('expanded');
+      }
+    };
+
+    // --- Sincronización Inicial y resto del código existente ---
+    if (window.headerState.isExpanded && mobileMediaQuery.matches) {
+      hamburgerInput.checked = true;
+      setTimeout(expandHeader, 50);
+    } else {
+      hamburgerInput.checked = false;
+      // Usar altura sticky o colapsada según estado inicial
+      const initialHeight = window.headerState.isSticky
+        ? 40
+        : mobileMediaQuery.matches
+          ? window.headerState.collapsedHeight
+          : 60;
+      setHeaderHeight(initialHeight);
+      // Restaurar margen escritorio si aplica
+      if (
+        !mobileMediaQuery.matches &&
+        !window.headerState.isSticky &&
+        headerInner instanceof HTMLElement
+      ) {
+        headerInner.style.margin = '0.8rem auto 0';
+      }
+    }
+
+    // --- Event Listeners (Menú Expansible) ---
+    hamburgerInput.addEventListener('change', () => {
+      const isChecked = hamburgerInput.checked;
+      if (isChecked) {
+        expandHeader();
+      } else {
+        collapseHeader();
+      }
+      hamburgerInput.setAttribute('aria-expanded', isChecked.toString());
+    });
+
+    navElement.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (mobileMediaQuery.matches && window.headerState.isExpanded) {
+          hamburgerInput.checked = false;
+          collapseHeader();
+          hamburgerInput.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    window.addEventListener('resize', () => {
+      const isMobile = mobileMediaQuery.matches;
+
+      console.log(
+        `Resize: isMobile=${isMobile}, isExpanded=${window.headerState.isExpanded}, isSticky=${header.classList.contains('sticky')}`
+      );
+
+      // CASO: Cambio de móvil a escritorio (con o sin menú expandido)
+      if (!isMobile && window.innerWidth > 900) {
+        // Doble verificación
+        console.log('Resize: Detecting Mobile -> Desktop transition');
+
+        // Limpieza completa cuando:
+        // 1. El menú está expandido O
+        // 2. El ancho cambió significativamente (indicando un cambio real de modo)
+        if (
+          window.headerState.isExpanded ||
+          Math.abs((window.headerState.lastWidth || 0) - window.innerWidth) > 100
+        ) {
+          resetNavigationCompletely();
+        }
+      }
+      // CASO: Redimensionar DENTRO DE MÓVIL mientras está expandido
+      else if (isMobile && window.headerState.isExpanded) {
+        console.log('Resize: Within Mobile (Expanded). Re-applying expand logic...');
+        expandHeader();
+      }
+      // CASO: Redimensionar A MÓVIL desde escritorio
+      else if (isMobile && !window.headerState.wasOnMobile && headerInner instanceof HTMLElement) {
+        // Marcar que ahora estamos en móvil
+        window.headerState.wasOnMobile = true;
+        headerInner.style.margin = '0 auto';
+      }
+      // CASO: Dentro de escritorio con sticky
+      else if (
+        !isMobile &&
+        header.classList.contains('sticky') &&
+        headerInner instanceof HTMLElement
+      ) {
+        window.headerState.wasOnMobile = false;
+        headerInner.style.margin = '0 auto';
+      }
+      // CASO: Dentro de escritorio sin sticky
+      else if (
+        !isMobile &&
+        !header.classList.contains('sticky') &&
+        headerInner instanceof HTMLElement
+      ) {
+        window.headerState.wasOnMobile = false;
+        headerInner.style.margin = '0.8rem auto 0';
+      }
+
+      // Almacenar ancho actual para detectar cambios grandes
+      window.headerState.lastWidth = window.innerWidth;
+
+      // Siempre evaluar estado sticky/hide
+      handleScroll();
+    });
+
+    // Añadir limpieza en transiciones de página de Astro
+    document.addEventListener('astro:before-swap', resetNavigationCompletely);
+
+    // --- Theme toggle (Lógica Original) ---
+    const themeSwitch = document.querySelector('.theme-switch__checkbox');
+    const switchLabel = document.querySelector('.theme-switch');
+    if (themeSwitch instanceof HTMLInputElement && switchLabel) {
+      const sunIcon = switchLabel.querySelector('.sun-icon');
+      const moonIcon = switchLabel.querySelector('.moon-icon');
+      const updateIcons = (isDark) => {
+        if (sunIcon instanceof SVGElement && moonIcon instanceof SVGElement) {
+          if (isDark) {
+            sunIcon.style.opacity = '1';
+            sunIcon.style.transform = 'scale(1)';
+            moonIcon.style.opacity = '0';
+            moonIcon.style.transform = 'scale(0)';
+          } else {
+            sunIcon.style.opacity = '0';
+            sunIcon.style.transform = 'scale(0)';
+            moonIcon.style.opacity = '1';
+            moonIcon.style.transform = 'scale(1)';
+          }
+        }
+      };
+      const currentTheme =
+        localStorage.getItem('theme') ||
+        window.currentTheme ||
+        document.documentElement.getAttribute('data-theme') ||
+        'light';
+      const isCurrentlyDark = currentTheme === 'dark';
+      themeSwitch.checked = isCurrentlyDark;
+      switchLabel.setAttribute('aria-checked', isCurrentlyDark.toString());
+      updateIcons(isCurrentlyDark);
+      themeSwitch.addEventListener('change', () => {
+        const isNowDark = themeSwitch.checked;
+        const newTheme = isNowDark ? 'dark' : 'light';
+        document.documentElement.dataset.theme = newTheme;
+        localStorage.setItem('theme', newTheme);
+        window.currentTheme = newTheme;
+        window.usingSystemTheme = false;
+        switchLabel.setAttribute('aria-checked', isNowDark.toString());
+        updateIcons(isNowDark);
+      });
+      switchLabel.addEventListener('dblclick', () => {
+        localStorage.removeItem('theme');
+        window.usingSystemTheme = true;
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const newTheme = systemPrefersDark ? 'dark' : 'light';
+        document.documentElement.dataset.theme = newTheme;
+        window.currentTheme = newTheme;
+        themeSwitch.checked = systemPrefersDark;
+        switchLabel.setAttribute('aria-checked', systemPrefersDark.toString());
+        updateIcons(systemPrefersDark);
+        const message = document.createElement('div');
+        message.textContent = 'Usando tema del sistema';
+        message.style.cssText =
+          'position:fixed; top:120px; right:20px; background-color:rgba(0,0,0,0.7); color:white; padding:10px 15px; border-radius:5px; z-index:9999; opacity:0; transition: opacity 0.3s ease;';
+        document.body.appendChild(message);
+        setTimeout(() => (message.style.opacity = '1'), 10);
+        setTimeout(() => {
+          message.style.opacity = '0';
+          setTimeout(() => document.body.removeChild(message), 300);
+        }, 2000);
+      });
+    }
+
+    // --- Scroll Logic (Adaptada de Original) ---
+    const headerEl = header; // Usar referencia existente
+    let ticking = false;
+
+    // Restaurar clases iniciales sticky/hide
+    if (headerEl) {
+      // Determinar estado sticky inicial basado en scroll y estado guardado
+      if (window.scrollY > 100 || window.headerState.isSticky) {
+        if (!window.headerState.isSticky) window.headerState.isSticky = true; // Marcar como sticky si > 100px
+        headerEl.classList.add('sticky');
+        if (headerInner instanceof HTMLElement) {
+          // Aplicar estilos sticky iniciales
+          headerInner.style.margin = '0 auto';
+          headerInner.style.height = '40px'; // Altura sticky
+        }
+        if (window.headerState.scrollDirection === 'down' && window.headerState.hideEnabled) {
+          headerEl.classList.add('hide');
+        }
+      } else {
+        window.headerState.isSticky = false; // Asegurar que no esté marcado como sticky
+      }
+      setTimeout(() => headerEl.classList.add('js-ready'), 100); // Habilitar transiciones JS
+    }
+
+    function handleScroll() {
+      if (!headerEl || !headerInner) return;
+      const scrollY = window.scrollY;
+      const lastScrollY = window.headerState.lastScrollY;
+      window.headerState.scrollDirection = scrollY > lastScrollY ? 'down' : 'up';
+      window.headerState.lastScrollY = scrollY;
+      const shouldBeSticky = scrollY > 100;
+
+      if (shouldBeSticky) {
+        if (!window.headerState.isSticky) {
+          headerEl.classList.add('sticky');
+          window.headerState.isSticky = true;
+          // Aplicar solo cambio de altura manteniendo estructura
+          setHeaderHeight(40);
+          if (headerInner instanceof HTMLElement) {
+            headerInner.style.margin = '0 auto'; // Solo ajustar el margen
+          }
+        }
+
+        // Lógica de ocultar/mostrar al hacer scroll rápido (sin cambios)
+        if (
+          window.headerState.scrollDirection === 'down' &&
+          Math.abs(scrollY - lastScrollY) > 20 &&
+          window.headerState.hideEnabled
+        ) {
+          headerEl.classList.add('hide');
+        } else if (window.headerState.scrollDirection === 'up') {
+          headerEl.classList.remove('hide');
+        }
+      } else {
+        // Volver a estado normal (no sticky)
+        if (window.headerState.isSticky) {
+          headerEl.classList.remove('sticky');
+          headerEl.classList.remove('hide');
+          window.headerState.isSticky = false;
+          // Restaurar altura y margen correctos
+          if (window.headerState.isExpanded) {
+            expandHeader();
+          } // Recalcular altura expandida
+          else {
+            setHeaderHeight(window.headerState.collapsedHeight);
+          } // Restaurar colapsada
+          // Restaurar margen escritorio si aplica
+          if (!mobileMediaQuery.matches && headerInner instanceof HTMLElement) {
+            headerInner.style.margin = '0.8rem auto 0';
+          }
+        }
+      }
+      ticking = false;
+    }
+    // --- Scroll/Resize Listeners (Original) ---
+    let scrollHandler = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.removeEventListener('scroll', window._headerScrollHandler);
+    window.removeEventListener('resize', window._headerResizeHandler);
+    window._headerScrollHandler = scrollHandler;
+    window._headerResizeHandler = () => {
+      // Adaptado para llamar handleScroll Y la lógica de resize
+      handleScroll();
+      // Lógica de resize separada (ya incluida arriba en su propio listener)
+      // if (!mobileMediaQuery.matches && window.headerState.isExpanded) { ... }
+    };
+    window.addEventListener('scroll', window._headerScrollHandler, { passive: true });
+    window.addEventListener('resize', window._headerResizeHandler, { passive: true });
+    setTimeout(handleScroll, 100); // Ejecutar para estado inicial scroll
+
+    // --- Simulación Mouse para SplashCursor (Original) ---
+    setTimeout(() => {
+      try {
+        const rect = header.getBoundingClientRect();
+        for (let i = 0; i < 5; i++) {
+          const event = new MouseEvent('mousemove', {
+            bubbles: true,
+            cancelable: true,
+            clientX: rect.left + Math.random() * rect.width,
+            clientY: rect.top + Math.random() * rect.height,
+          });
+          header.dispatchEvent(event);
+        }
+      } catch (e) {
+        console.error('Error dispatching mouse events for SplashCursor:', e);
+      }
+    }, 500);
+  } // Fin setupHeader
+
+  // --- Ejecución de setupHeader (Original + Cálculo alturas) ---
+  document.addEventListener('DOMContentLoaded', () => {
+    const headerInner = document.querySelector('#site-header .header-inner');
+    const container = document.querySelector('#site-header .container');
+    // Usar alturas CSS por defecto como fallback robusto
+    window.headerState.collapsedHeight =
+      headerInner instanceof HTMLElement
+        ? parseFloat(window.getComputedStyle(headerInner).height) || 60
+        : 60;
+    window.headerState.topRowHeight =
+      container instanceof HTMLElement
+        ? parseFloat(window.getComputedStyle(container).height) || 60
+        : 60;
+    setupHeader();
+  });
+  document.addEventListener('astro:page-load', setupHeader);
+  document.addEventListener('astro:after-swap', () => {
+    const headerInner = document.querySelector('#site-header .header-inner');
+    const container = document.querySelector('#site-header .container');
+    window.headerState.collapsedHeight =
+      headerInner instanceof HTMLElement
+        ? parseFloat(window.getComputedStyle(headerInner).height) || 60
+        : 60;
+    window.headerState.topRowHeight =
+      container instanceof HTMLElement
+        ? parseFloat(window.getComputedStyle(container).height) || 60
+        : 60;
+    setupHeader();
+    // Restaurar estado 'hide'
+    setTimeout(() => {
+      const headerEl = document.getElementById('site-header');
+      if (
+        headerEl &&
+        window.headerState.isSticky &&
+        window.headerState.scrollDirection === 'down' &&
+        window.headerState.hideEnabled
+      ) {
+        headerEl.classList.add('hide');
+      }
+    }, 100);
+  });
+  document.addEventListener('astro:before-swap', resetNavigationCompletely);
+</script>

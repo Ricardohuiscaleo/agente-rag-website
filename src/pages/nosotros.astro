@@ -1,0 +1,338 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Define los metadatos de la página
+const pageTitle = 'Nosotros | Agente RAG - Expertos en IA RAG para Pymes';
+const pageDescription =
+  'Conoce al equipo detrás de Agente RAG. Somos especialistas en implementar soluciones de IA RAG para optimizar la productividad de tu empresa en Chile.';
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="page-container">
+    <section class="hero-section">
+      <h1 class="main-title">Nuestro Equipo</h1>
+      <p class="subtitle">Expertos en Inteligencia Artificial RAG</p>
+    </section>
+
+    <section class="content-section">
+      <div class="text-block">
+        <h2>Quiénes Somos</h2>
+        <p>
+          En Agente RAG, somos un equipo apasionado de expertos en inteligencia artificial y
+          procesamiento de lenguaje natural, dedicados a transformar la manera en que las pequeñas y
+          medianas empresas en Chile utilizan sus datos para potenciar su crecimiento.
+        </p>
+        <p>
+          Fundada en 2024, nuestra empresa nació con la misión de democratizar el acceso a
+          tecnologías avanzadas de IA para empresas de todos los tamaños, no solo para las grandes
+          corporaciones.
+        </p>
+      </div>
+
+      <div class="team-grid">
+        <div class="team-member">
+          <div class="member-image placeholder-image"></div>
+          <h3>Ricardo Huiscafé</h3>
+          <p class="member-role">CEO & Fundador</p>
+          <p class="member-description">
+            Con más de 10 años de experiencia en desarrollo de software e inteligencia artificial,
+            lidera la visión estratégica de Agente RAG.
+          </p>
+        </div>
+        <div class="team-member">
+          <div class="member-image placeholder-image"></div>
+          <h3>Ana Martínez</h3>
+          <p class="member-role">CTO</p>
+          <p class="member-description">
+            Especialista en arquitecturas RAG y modelos de lenguaje, responsable de nuestras
+            soluciones tecnológicas.
+          </p>
+        </div>
+        <div class="team-member">
+          <div class="member-image placeholder-image"></div>
+          <h3>Carlos Pérez</h3>
+          <p class="member-role">Ingeniero de IA</p>
+          <p class="member-description">
+            Experto en procesamiento de lenguaje natural y optimización de modelos RAG para casos
+            específicos.
+          </p>
+        </div>
+        <div class="team-member">
+          <div class="member-image placeholder-image"></div>
+          <h3>Daniela Rojas</h3>
+          <p class="member-role">Consultora de Soluciones</p>
+          <p class="member-description">
+            Trabaja directamente con clientes para entender sus necesidades y diseñar soluciones
+            personalizadas.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-block">
+        <h2>Nuestra Filosofía</h2>
+        <p>
+          Creemos firmemente que la tecnología debe ser accesible y beneficiosa para todos. Por eso,
+          nos dedicamos a crear soluciones de IA que sean:
+        </p>
+        <ul class="values-list">
+          <li>
+            <strong>Accesibles:</strong> Diseñadas para empresas de todos los tamaños y presupuestos
+          </li>
+          <li>
+            <strong>Personalizables:</strong> Adaptadas a las necesidades específicas de cada negocio
+          </li>
+          <li>
+            <strong>Éticas:</strong> Comprometidas con la privacidad y el uso responsable de los datos
+          </li>
+          <li><strong>Efectivas:</strong> Orientadas a resultados tangibles y medibles</li>
+        </ul>
+      </div>
+
+      <div class="cta-block">
+        <h2>¿Quieres conocer más de nosotros?</h2>
+        <p>Agenda una llamada con nuestro equipo y descubre cómo podemos ayudarte.</p>
+        <a href="/contacto" class="cta-button">Contáctanos</a>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .hero-section {
+    text-align: center;
+    padding: 4rem 0 3rem;
+  }
+
+  .main-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    color: #4b5563;
+    margin-bottom: 2rem;
+  }
+
+  .content-section {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .text-block {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .text-block h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #111827;
+  }
+
+  .text-block p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #4b5563;
+    margin-bottom: 1rem;
+  }
+
+  .values-list {
+    list-style-type: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .values-list li {
+    padding: 1.25rem;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .values-list li:hover {
+    transform: translateY(-3px);
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+
+  .team-member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .team-member:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .member-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+  }
+
+  .placeholder-image {
+    background: linear-gradient(45deg, #e2e8f0, #cbd5e1);
+  }
+
+  .member-role {
+    color: #6366f1;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+  }
+
+  .member-description {
+    font-size: 0.95rem;
+    color: #4b5563;
+  }
+
+  .cta-block {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border-radius: 1rem;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    color: white;
+    margin: 3rem auto;
+    max-width: 800px;
+  }
+
+  .cta-block h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: white;
+  }
+
+  .cta-block p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: white;
+    color: #4f46e5;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Modo oscuro */
+  :global(html[data-theme='dark']) .main-title {
+    background: linear-gradient(45deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  :global(html[data-theme='dark']) .subtitle {
+    color: #e2e8f0;
+  }
+
+  :global(html[data-theme='dark']) .text-block h2 {
+    color: #f3f4f6;
+  }
+
+  :global(html[data-theme='dark']) .text-block p {
+    color: #d1d5db;
+  }
+
+  :global(html[data-theme='dark']) .values-list li {
+    background: #1f2937;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  :global(html[data-theme='dark']) .team-member {
+    background: #1f2937;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+  }
+
+  :global(html[data-theme='dark']) .placeholder-image {
+    background: linear-gradient(45deg, #334155, #475569);
+  }
+
+  :global(html[data-theme='dark']) .member-role {
+    color: #818cf8;
+  }
+
+  :global(html[data-theme='dark']) .member-description {
+    color: #d1d5db;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 3rem 0 2rem;
+    }
+
+    .main-title {
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+    }
+
+    .values-list {
+      grid-template-columns: 1fr;
+    }
+
+    .team-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .cta-block {
+      padding: 2rem 1.5rem;
+    }
+
+    .cta-block h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>

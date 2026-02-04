@@ -1,0 +1,649 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Preguntas frecuentes agrupadas por categorías
+const faqCategories = [
+  {
+    name: 'General',
+    faqs: [
+      {
+        question: '¿Qué es un agente RAG?',
+        answer:
+          'Un agente RAG (Retrieval-Augmented Generation) es un sistema de inteligencia artificial que combina la capacidad de recuperar información específica de una base de conocimiento con la generación de respuestas coherentes. A diferencia de los modelos tradicionales, un agente RAG puede buscar y utilizar datos de tu empresa para proporcionar respuestas precisas y personalizadas.',
+      },
+      {
+        question: '¿Qué diferencia hay entre un agente RAG y ChatGPT?',
+        answer:
+          'Mientras que ChatGPT se basa exclusivamente en el conocimiento con el que fue entrenado (con un corte de datos hasta cierta fecha), un agente RAG puede acceder y procesar información actualizada y específica de tu empresa. Esto significa que puede responder preguntas sobre tus productos, servicios, procesos internos y datos específicos con mayor precisión y relevancia.',
+      },
+      {
+        question: '¿Qué tipos de empresas pueden beneficiarse de un agente RAG?',
+        answer:
+          'Empresas de todos los tamaños y sectores pueden beneficiarse de los agentes RAG. Son especialmente útiles para PyMEs que manejan grandes volúmenes de información, empresas con procesos complejos, negocios que requieren atención al cliente 24/7, o cualquier organización que busque automatizar tareas repetitivas basadas en conocimiento específico.',
+      },
+    ],
+  },
+  {
+    name: 'Implementación',
+    faqs: [
+      {
+        question: '¿Qué necesito para implementar un agente RAG en mi empresa?',
+        answer:
+          'Para implementar un agente RAG necesitas: 1) Los datos y documentos que contengan el conocimiento específico de tu empresa, 2) Definir claramente los casos de uso y objetivos, y 3) Trabajar con un equipo especializado como el nuestro para configurar, entrenar y desplegar el sistema. Nosotros nos encargamos de todo el proceso técnico.',
+      },
+      {
+        question: '¿Cuánto tiempo toma implementar un agente RAG?',
+        answer:
+          'El tiempo de implementación varía según la complejidad y el volumen de datos. Para proyectos pequeños, podemos tener una versión inicial funcionando en 2-4 semanas. Proyectos más complejos pueden tomar entre 1-3 meses. Durante nuestra consulta inicial, podemos darte una estimación más precisa según tus necesidades específicas.',
+      },
+      {
+        question: '¿Necesito conocimientos técnicos para usar un agente RAG?',
+        answer:
+          'No, nuestros agentes RAG están diseñados con interfaces intuitivas y fáciles de usar. No se requieren conocimientos técnicos para interactuar con ellos. Además, proporcionamos capacitación completa para que tu equipo pueda aprovechar al máximo la tecnología.',
+      },
+    ],
+  },
+  {
+    name: 'Costos y ROI',
+    faqs: [
+      {
+        question: '¿Cuánto cuesta implementar un agente RAG?',
+        answer:
+          'Ofrecemos diferentes planes según las necesidades de tu empresa. Los precios comienzan desde $XXX mensuales para soluciones básicas, y tenemos opciones escalables para necesidades más complejas. Contáctanos para recibir una cotización personalizada basada en tus requerimientos específicos.',
+      },
+      {
+        question: '¿Cuál es el retorno de inversión (ROI) de un agente RAG?',
+        answer:
+          'El ROI varía según el caso de uso, pero nuestros clientes típicamente observan: reducción del 40-60% en tiempo de respuesta a consultas, disminución del 30% en costos operativos relacionados con búsqueda de información, y aumento del 25% en satisfacción de clientes y empleados. Durante nuestra consulta, podemos estimar el ROI potencial para tu caso específico.',
+      },
+      {
+        question: '¿Ofrecen algún período de prueba?',
+        answer:
+          'Sí, ofrecemos un período de prueba de 30 días para que puedas evaluar el impacto del agente RAG en tu empresa. Durante este tiempo, trabajaremos con un subconjunto de tus datos para demostrar las capacidades y el valor potencial del sistema.',
+      },
+    ],
+  },
+  {
+    name: 'Seguridad y Privacidad',
+    faqs: [
+      {
+        question: '¿Mis datos están seguros con un agente RAG?',
+        answer:
+          'La seguridad de tus datos es nuestra prioridad. Implementamos cifrado de extremo a extremo, controles de acceso estrictos, y las mejores prácticas de seguridad informática. Todos los datos se almacenan en servidores seguros en Chile, cumpliendo con regulaciones locales de protección de datos.',
+      },
+      {
+        question: '¿Qué ocurre con la información confidencial de mi empresa?',
+        answer:
+          'Tu información nunca se comparte con terceros ni se usa para entrenar modelos públicos. Los agentes RAG que desarrollamos son exclusivos para tu empresa y solo tienen acceso a los datos que tú autorices. Además, implementamos técnicas para detectar y proteger información sensible.',
+      },
+      {
+        question: '¿Cumple con normativas de protección de datos?',
+        answer:
+          'Sí, nuestras soluciones cumplen con las normativas chilenas de protección de datos y estándares internacionales como GDPR. Trabajamos con tu equipo legal para asegurar que la implementación cumpla con todos los requisitos regulatorios específicos de tu industria.',
+      },
+    ],
+  },
+  {
+    name: 'Soporte y Mantenimiento',
+    faqs: [
+      {
+        question: '¿Qué tipo de soporte ofrecen después de la implementación?',
+        answer:
+          'Ofrecemos soporte técnico continuo incluido en todos nuestros planes. Esto incluye monitorización del sistema, actualizaciones de seguridad, y asistencia técnica. Nuestros planes premium incluyen también mejoras continuas, análisis de rendimiento y optimización de resultados.',
+      },
+      {
+        question: '¿Con qué frecuencia se actualiza el sistema?',
+        answer:
+          'El sistema se actualiza automáticamente para incorporar nuevos datos y documentos según la frecuencia que definas (diaria, semanal o mensualmente). También realizamos actualizaciones técnicas cuando hay mejoras significativas en los modelos base o en nuestras tecnologías de procesamiento.',
+      },
+      {
+        question: '¿Puedo expandir o modificar el sistema después de implementarlo?',
+        answer:
+          'Absolutamente. Nuestros sistemas están diseñados para ser escalables y adaptables. Puedes añadir nuevas fuentes de datos, ampliar a más departamentos o funcionalidades, o ajustar los casos de uso según evolucionen tus necesidades empresariales.',
+      },
+    ],
+  },
+];
+
+// Define los metadatos de la página
+const pageTitle = 'Preguntas Frecuentes | Agente RAG - IA RAG para PyMEs';
+const pageDescription =
+  'Encuentra respuestas a las preguntas más comunes sobre agentes RAG, implementación, costos, seguridad y más. Todo lo que necesitas saber sobre nuestras soluciones de IA.';
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <div class="page-container">
+    <section class="hero-section">
+      <h1 class="main-title">Preguntas Frecuentes</h1>
+      <p class="subtitle">Respuestas a las dudas más comunes sobre nuestros agentes RAG</p>
+    </section>
+
+    <section class="faq-section">
+      <div class="faq-categories" id="faq-categories">
+        <div class="category-tabs">
+          {
+            faqCategories.map((category, index) => (
+              <button
+                class={`category-tab ${index === 0 ? 'active' : ''}`}
+                data-category={category.name.toLowerCase()}
+              >
+                {category.name}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="search-container">
+        <form class="search-form">
+          <input
+            type="text"
+            placeholder="Buscar preguntas..."
+            id="faq-search"
+            class="search-input"
+          />
+          <button type="submit" class="search-btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <div class="faq-container">
+        {
+          faqCategories.map((category, categoryIndex) => (
+            <div
+              class={`faq-category ${categoryIndex === 0 ? 'active' : ''}`}
+              id={`category-${category.name.toLowerCase()}`}
+              data-category={category.name.toLowerCase()}
+            >
+              <h2 class="category-title">{category.name}</h2>
+              <div class="faq-list">
+                {category.faqs.map((faq, faqIndex) => (
+                  <div class="faq-item" data-faq-id={`${categoryIndex}-${faqIndex}`}>
+                    <button class="faq-question">
+                      <span>{faq.question}</span>
+                      <svg
+                        class="arrow-icon"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+                    <div class="faq-answer">
+                      <p>{faq.answer}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="contact-cta">
+      <div class="cta-container">
+        <h2>¿No encontraste lo que buscabas?</h2>
+        <p>
+          Contáctanos directamente y un especialista resolverá todas tus dudas sobre cómo
+          implementar un agente RAG en tu empresa.
+        </p>
+        <a href="/contacto" class="cta-button">Hablemos</a>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .page-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .hero-section {
+    text-align: center;
+    padding: 4rem 0 2rem;
+  }
+
+  .main-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    color: #4b5563;
+    margin-bottom: 2rem;
+  }
+
+  .faq-section {
+    padding: 1rem 0;
+  }
+
+  .faq-categories {
+    margin-bottom: 2rem;
+  }
+
+  .category-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .category-tab {
+    padding: 0.75rem 1.25rem;
+    background: #f3f4f6;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .category-tab:hover {
+    background: #e5e7eb;
+  }
+
+  .category-tab.active {
+    background: #4f46e5;
+    color: white;
+  }
+
+  .search-container {
+    margin-bottom: 2rem;
+    max-width: 600px;
+  }
+
+  .search-form {
+    display: flex;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    background: transparent;
+  }
+
+  .search-btn {
+    background: transparent;
+    border: none;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #4b5563;
+  }
+
+  .faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-category {
+    display: none;
+    margin-bottom: 3rem;
+  }
+
+  .faq-category.active {
+    display: block;
+  }
+
+  .category-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .faq-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    padding: 1.25rem;
+    background: white;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111827;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .faq-question:hover {
+    background: #f9fafb;
+  }
+
+  .arrow-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #6b7280;
+    transition: transform 0.3s ease;
+  }
+
+  .faq-item.active .arrow-icon {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    padding: 0 1.25rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    opacity: 0;
+  }
+
+  .faq-item.active .faq-answer {
+    padding: 0 1.25rem 1.25rem;
+    max-height: 500px;
+    opacity: 1;
+  }
+
+  .faq-answer p {
+    color: #4b5563;
+    line-height: 1.6;
+  }
+
+  .contact-cta {
+    margin: 2rem auto 4rem;
+  }
+
+  .cta-container {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border-radius: 1rem;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .cta-container h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .cta-container p {
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: white;
+    color: #4f46e5;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Modo oscuro */
+  :global(html[data-theme='dark']) .main-title {
+    background: linear-gradient(45deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  :global(html[data-theme='dark']) .subtitle {
+    color: #e2e8f0;
+  }
+
+  :global(html[data-theme='dark']) .category-tab {
+    background: #374151;
+    color: #d1d5db;
+  }
+
+  :global(html[data-theme='dark']) .category-tab:hover {
+    background: #4b5563;
+  }
+
+  :global(html[data-theme='dark']) .category-tab.active {
+    background: #6366f1;
+    color: white;
+  }
+
+  :global(html[data-theme='dark']) .search-form {
+    border-color: #4b5563;
+  }
+
+  :global(html[data-theme='dark']) .search-input {
+    color: #f3f4f6;
+  }
+
+  :global(html[data-theme='dark']) .search-btn svg {
+    color: #d1d5db;
+  }
+
+  :global(html[data-theme='dark']) .category-title {
+    color: #f3f4f6;
+    border-color: #4b5563;
+  }
+
+  :global(html[data-theme='dark']) .faq-item {
+    border-color: #374151;
+  }
+
+  :global(html[data-theme='dark']) .faq-question {
+    background: #1f2937;
+    color: #f3f4f6;
+  }
+
+  :global(html[data-theme='dark']) .faq-question:hover {
+    background: #2d3748;
+  }
+
+  :global(html[data-theme='dark']) .arrow-icon {
+    color: #9ca3af;
+  }
+
+  :global(html[data-theme='dark']) .faq-answer p {
+    color: #d1d5db;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 3rem 0 2rem;
+    }
+
+    .main-title {
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+    }
+
+    .category-tabs {
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .category-tab {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .cta-container h2 {
+      font-size: 1.75rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Manejo de pestañas de categorías
+    const categoryTabs = document.querySelectorAll('.category-tab');
+    const faqCategories = document.querySelectorAll('.faq-category');
+
+    categoryTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const category = tab.getAttribute('data-category');
+
+        // Actualizar pestañas activas
+        categoryTabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Mostrar categoría seleccionada
+        faqCategories.forEach((cat) => {
+          if (cat.getAttribute('data-category') === category) {
+            cat.classList.add('active');
+          } else {
+            cat.classList.remove('active');
+          }
+        });
+      });
+    });
+
+    // Funcionalidad de acordeón para preguntas
+    const faqQuestions = document.querySelectorAll('.faq-question');
+
+    faqQuestions.forEach((question) => {
+      question.addEventListener('click', () => {
+        const faqItem = question.parentElement;
+        const isActive = faqItem?.classList.contains('active');
+
+        // Cerrar otros elementos abiertos
+        document.querySelectorAll('.faq-item.active').forEach((item) => {
+          if (item !== faqItem) {
+            item.classList.remove('active');
+          }
+        });
+
+        // Alternar estado actual
+        if (faqItem) {
+          faqItem.classList.toggle('active', !isActive);
+        }
+      });
+    });
+
+    // Búsqueda de preguntas
+    const searchForm = document.querySelector('.search-form');
+    const searchInput = document.getElementById('faq-search') as HTMLInputElement | null;
+
+    if (searchForm && searchInput) {
+      searchForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        searchFAQs();
+      });
+
+      searchInput.addEventListener('input', () => {
+        searchFAQs();
+      });
+
+      function searchFAQs() {
+        const searchTerm = searchInput?.value.toLowerCase().trim() || '';
+
+        if (!searchTerm) {
+          // Resetear vista si no hay término de búsqueda
+          (categoryTabs[0] as HTMLElement).click();
+          document.querySelectorAll('.faq-item').forEach((item) => {
+            (item as HTMLElement).style.display = 'block';
+          });
+          return;
+        }
+
+        // Mostrar todas las categorías para la búsqueda
+        faqCategories.forEach((cat) => {
+          cat.classList.add('active');
+        });
+
+        // Actualizar pestañas (ninguna activa durante búsqueda)
+        categoryTabs.forEach((tab) => {
+          tab.classList.remove('active');
+        });
+
+        // Filtrar preguntas
+        let hasResults = false;
+        document.querySelectorAll('.faq-item').forEach((item) => {
+          const question = item.querySelector('.faq-question span')?.textContent?.toLowerCase() || '';
+          const answer = item.querySelector('.faq-answer p')?.textContent?.toLowerCase() || '';
+
+          if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+            (item as HTMLElement).style.display = 'block';
+            item.classList.add('active'); // Expandir elementos que coincidan
+            hasResults = true;
+          } else {
+            (item as HTMLElement).style.display = 'none';
+            item.classList.remove('active');
+          }
+        });
+
+        // Mostrar mensaje si no hay resultados
+        // Se podría añadir un elemento en el HTML para mostrar este mensaje
+      }
+    }
+  });
+</script>
